@@ -20,24 +20,26 @@ public class ImageEntity {
     private String imageUrl;
     private Boolean imageStatus;
 
+    private String fkArticleId;
     public ImageEntity() {
-    }
-
-    public ImageEntity(String id, String imageUrl, Boolean imageStatus) {
-        this.id = id;
-        this.imageUrl = imageUrl;
-        this.imageStatus = imageStatus;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ImageEntity that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(imageStatus, that.imageStatus);
+        return Objects.equals(id, that.id) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(imageStatus, that.imageStatus) && Objects.equals(fkArticleId, that.fkArticleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, imageUrl, imageStatus);
+        return Objects.hash(id, imageUrl, imageStatus, fkArticleId);
+    }
+
+    public ImageEntity(String id, String imageUrl, Boolean imageStatus, String fkArticleId) {
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.imageStatus = imageStatus;
+        this.fkArticleId = fkArticleId;
     }
 }

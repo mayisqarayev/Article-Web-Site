@@ -1,14 +1,13 @@
 package com.Article.Web.Site.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.Article.Web.Site.dto.ImageResponseDto;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,14 +26,27 @@ public class ArticleEntity {
     private BigDecimal countOfLikes;
     private BigDecimal countOfComments;
 
-    private String fkImageId;
     private String fkCategoryId;
     private String fkAccountId;
+    @OneToMany(mappedBy = "fkArticleId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = ImageEntity.class)
+    private List<ImageEntity> images;
 
     public ArticleEntity() {
     }
 
-    public ArticleEntity(String id, String articleHeader, String articleText, LocalDate articleDeploymentDate, Boolean articleStatus, BigDecimal countOfReaders, BigDecimal countOfLikes, BigDecimal countOfComments, String fkImageId, String fkCategoryId, String fkAccountId) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArticleEntity that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(articleHeader, that.articleHeader) && Objects.equals(articleText, that.articleText) && Objects.equals(articleDeploymentDate, that.articleDeploymentDate) && Objects.equals(articleStatus, that.articleStatus) && Objects.equals(countOfReaders, that.countOfReaders) && Objects.equals(countOfLikes, that.countOfLikes) && Objects.equals(countOfComments, that.countOfComments) && Objects.equals(fkCategoryId, that.fkCategoryId) && Objects.equals(fkAccountId, that.fkAccountId) && Objects.equals(images, that.images);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, articleHeader, articleText, articleDeploymentDate, articleStatus, countOfReaders, countOfLikes, countOfComments, fkCategoryId, fkAccountId, images);
+    }
+
+    public ArticleEntity(String id, String articleHeader, String articleText, LocalDate articleDeploymentDate, Boolean articleStatus, BigDecimal countOfReaders, BigDecimal countOfLikes, BigDecimal countOfComments, String fkCategoryId, String fkAccountId, List<ImageEntity> images) {
         this.id = id;
         this.articleHeader = articleHeader;
         this.articleText = articleText;
@@ -43,22 +55,8 @@ public class ArticleEntity {
         this.countOfReaders = countOfReaders;
         this.countOfLikes = countOfLikes;
         this.countOfComments = countOfComments;
-        this.fkImageId = fkImageId;
         this.fkCategoryId = fkCategoryId;
         this.fkAccountId = fkAccountId;
+        this.images = images;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ArticleEntity that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(articleHeader, that.articleHeader) && Objects.equals(articleText, that.articleText) && Objects.equals(articleDeploymentDate, that.articleDeploymentDate) && Objects.equals(articleStatus, that.articleStatus) && Objects.equals(fkImageId, that.fkImageId) && Objects.equals(fkCategoryId, that.fkCategoryId) && Objects.equals(fkAccountId, that.fkAccountId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, articleHeader, articleText, articleDeploymentDate, articleStatus, fkImageId, fkCategoryId, fkAccountId);
-    }
-
-
 }
