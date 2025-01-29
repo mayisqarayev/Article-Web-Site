@@ -1,9 +1,6 @@
 package com.Article.Web.Site.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,14 +9,22 @@ import java.util.Objects;
 @Entity
 @Builder
 @Data
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {
+        "follow_status", "fk_follower_account_id", "fk_followed_account_id"
+})})
 public class FollowEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(name = "follow_status")
     private Boolean followStatus;
 
+    @Column(name = "fk_follower_account_id")
     private String fkFollowerAccountId;
+
+    @Column(name = "fk_followed_account_id")
     private String fkFollowedAccountId;
 
     public FollowEntity() {

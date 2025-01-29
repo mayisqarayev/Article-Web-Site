@@ -1,9 +1,6 @@
 package com.Article.Web.Site.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,14 +9,22 @@ import java.util.Objects;
 @Entity
 @Builder
 @Data
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {
+        "report_status", "fk_reporter_account_id", "fk_reported_article_id"
+})})
 public class ReportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(name = "report_status")
     private Boolean reportStatus;
 
+    @Column(name = "fk_reporter_account_id")
     private String fkReporterAccountId;
+
+    @Column(name = "fk_reported_article_id")
     private String fkReportedArticleId;
 
     public ReportEntity() {

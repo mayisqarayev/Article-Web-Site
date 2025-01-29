@@ -7,6 +7,9 @@ import com.Article.Web.Site.repo.CategoryRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CategoryService {
 
@@ -28,6 +31,12 @@ public class CategoryService {
 
     public CategoryResponseDto getCategoryById(String id) {
         return converter.toCategoryResponseDtoFromEntity(repository.findById(id).get());
+    }
+
+    public List<CategoryResponseDto> getAllCategories() {
+        return repository.findAll().stream()
+                .map(converter::toCategoryResponseDtoFromEntity)
+                .collect(Collectors.toList());
     }
 
 }
