@@ -14,4 +14,8 @@ public class FollowService {
         this.repository = repository;
     }
 
+    public BigDecimal getTotalFollowersById(String id) {
+        return repository.calculateTotalFollowersById(id);
+    }
+
 }

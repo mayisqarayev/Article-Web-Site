@@ -1,12 +1,15 @@
 package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.ArticleConverter;
-import com.Article.Web.Site.dto.AddArticleRequestDto;
-import com.Article.Web.Site.dto.ArticleResponseDto;
+import com.Article.Web.Site.dto.*;
 import com.Article.Web.Site.model.ArticleEntity;
 import com.Article.Web.Site.repo.ArticleRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,9 +40,36 @@ public class ArticleService {
         repository.deleteArticleEntityById(id);
     }
 
-    public ArticleResponseDto getArticleById(String id) {
-        return repository.findById(id).get();
+    public ArticleInfoResponseDto getArticleById(String id) {
+        return converter.toArticleInfoResponseDtoFromEntity(repository.findById(id).get());
     }
+
+    public List<ArticleResponseDto> getAllArticles() {
+        return repository.findAll().stream()
+                .map(converter::toArticleResponseDtoFromEntity)
+                .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public ArticlePageResponseDto getArticlesPagination(ArticlePageRequestDto requestDto) {
+        Page<ArticleEntity> entityPage = repository.findAll(PageRequest.of(
+                requestDto.getPageNumber(), requestDto.getPageSize()
+        ));
+        return ArticlePageResponseDto.builder()
+                .totalElements(entityPage.getTotalElements())
+                .totalPages(entityPage.getTotalPages())
+                .hasNext(entityPage.hasNext())
+                .content(
+                        entityPage.getContent().stream()
+                                .map(converter::toArticleResponseDtoFromEntity)
+                                .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
+                                .collect(Collectors.toList())
+                ).build();
+    }
+
+
+
+
 
 
 

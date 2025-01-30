@@ -1,9 +1,6 @@
 package com.Article.Web.Site.controller;
 
-import com.Article.Web.Site.dto.ArticleResponseDto;
 import com.Article.Web.Site.service.ArticleService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
