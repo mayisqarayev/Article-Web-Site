@@ -23,4 +23,10 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, String> 
         update ArticleEntity a set a.articleStatus = false where a.id = ?1
     """)
     void deleteArticleEntityById(String id);
+
+    @Query("""
+        select a from ArticleEntity as a
+        where a.countOfReaders = (select max(a.countOfReaders) from ArticleEntity a)
+    """)
+    ArticleEntity findMostReadedArticleEntity();
 }

@@ -44,7 +44,7 @@ public class ArticleService {
         return converter.toArticleInfoResponseDtoFromEntity(repository.findById(id).get());
     }
 
-    public List<ArticleResponseDto> getAllArticles() {
+    public List<ArticleResponseDto> getArticles() {
         return repository.findAll().stream()
                 .map(converter::toArticleResponseDtoFromEntity)
                 .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
@@ -67,9 +67,41 @@ public class ArticleService {
                 ).build();
     }
 
+    public List<ArticleResponseDto> getArticlesMostReaded() {
+        return repository.findAll().stream()
+                .map(converter::toArticleResponseDtoFromEntity)
+                .sorted(Comparator.comparing(ArticleResponseDto::getCountOfReaders).reversed())
+                .collect(Collectors.toList());
+    }
 
+    public ArticleResponseDto getMostReadedArticle() {
+        return converter.toArticleResponseDtoFromEntity(repository.findMostReadedArticleEntity());
+    }
 
+    public List<ArticleResponseDto> getArticlesByAccountId(String accountId) {
+        return repository.findAll().stream()
+                .filter(entity -> entity.getFkAccountId().equals(accountId))
+                .map(converter::toArticleResponseDtoFromEntity)
+                .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
+                .collect(Collectors.toList());
+    }
 
+    public ArticlePageResponseDto getArticlesPaginationByAccountId(ArticlePageRequestDto requestDto, String accountId) {
+        Page<ArticleEntity> entityPage = repository.findAll(PageRequest.of(
+                requestDto.getPageNumber(), requestDto.getPageSize()
+        ));
+        return ArticlePageResponseDto.builder()
+                .totalElements(entityPage.getTotalElements())
+                .totalPages(entityPage.getTotalPages())
+                .hasNext(entityPage.hasNext())
+                .content(
+                        entityPage.getContent().stream()
+                                .filter(entity -> entity.getFkAccountId().equals(accountId))
+                                .map(converter::toArticleResponseDtoFromEntity)
+                                .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
+                                .collect(Collectors.toList())
+                ).build();
+    }
 
 
 
