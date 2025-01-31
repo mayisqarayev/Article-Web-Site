@@ -1,11 +1,11 @@
-package com.Article.Web.Site.dto;
+package com.Article.Web.Site.dto.response;
 
+import com.Article.Web.Site.dto.response.AccountResponseDto;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder

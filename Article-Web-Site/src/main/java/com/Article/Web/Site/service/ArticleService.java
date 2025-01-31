@@ -1,7 +1,12 @@
 package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.ArticleConverter;
-import com.Article.Web.Site.dto.*;
+import com.Article.Web.Site.dto.request.AddArticleRequestDto;
+import com.Article.Web.Site.dto.request.ArticlePageRequestDto;
+import com.Article.Web.Site.dto.request.UpdateArticleRequestDto;
+import com.Article.Web.Site.dto.response.ArticleInfoResponseDto;
+import com.Article.Web.Site.dto.response.ArticlePageResponseDto;
+import com.Article.Web.Site.dto.response.ArticleResponseDto;
 import com.Article.Web.Site.model.ArticleEntity;
 import com.Article.Web.Site.repo.ArticleRepository;
 import org.springframework.data.domain.Page;
@@ -9,8 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -147,6 +150,4 @@ public class ArticleService {
                                 .collect(Collectors.toList())
                 ).build();
     }
-
-
 }

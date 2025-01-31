@@ -1,7 +1,7 @@
 package com.Article.Web.Site.converter;
 
-import com.Article.Web.Site.dto.AddCategoryRequestDto;
-import com.Article.Web.Site.dto.CategoryResponseDto;
+import com.Article.Web.Site.dto.request.AddCategoryRequestDto;
+import com.Article.Web.Site.dto.response.CategoryResponseDto;
 import com.Article.Web.Site.model.CategoryEntity;
 import org.springframework.stereotype.Component;
 

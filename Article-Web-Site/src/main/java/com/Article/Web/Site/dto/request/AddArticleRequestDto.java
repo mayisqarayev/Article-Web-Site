@@ -1,6 +1,5 @@
-package com.Article.Web.Site.dto;
+package com.Article.Web.Site.dto.request;
 
-import com.Article.Web.Site.model.ImageEntity;
 import lombok.Builder;
 import lombok.Data;
 import java.util.List;

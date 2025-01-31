@@ -1,6 +1,6 @@
 package com.Article.Web.Site.converter;
 
-import com.Article.Web.Site.dto.AddImageRequestDto;
+import com.Article.Web.Site.dto.request.AddImageRequestDto;
 import com.Article.Web.Site.model.ImageEntity;
 import org.springframework.stereotype.Component;
 

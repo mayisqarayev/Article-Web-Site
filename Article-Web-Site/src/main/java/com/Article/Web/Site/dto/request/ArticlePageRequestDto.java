@@ -1,4 +1,4 @@
-package com.Article.Web.Site.dto;
+package com.Article.Web.Site.dto.request;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Builder;

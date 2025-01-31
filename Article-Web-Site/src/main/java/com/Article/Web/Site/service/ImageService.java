@@ -1,7 +1,7 @@
 package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.ImageConverter;
-import com.Article.Web.Site.dto.AddImageRequestDto;
+import com.Article.Web.Site.dto.request.AddImageRequestDto;
 import com.Article.Web.Site.model.ImageEntity;
 import com.Article.Web.Site.repo.ImageRepository;
 import org.springframework.stereotype.Service;

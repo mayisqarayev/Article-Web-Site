@@ -1,7 +1,7 @@
 package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.AccountConverter;
-import com.Article.Web.Site.dto.AccountResponseDto;
+import com.Article.Web.Site.dto.response.AccountResponseDto;
 import com.Article.Web.Site.repo.AccountRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package com.Article.Web.Site.converter;
 
-import com.Article.Web.Site.dto.AddArticleRequestDto;
-import com.Article.Web.Site.dto.ArticleInfoResponseDto;
-import com.Article.Web.Site.dto.ArticleResponseDto;
-import com.Article.Web.Site.dto.ImageResponseDto;
+import com.Article.Web.Site.dto.request.AddArticleRequestDto;
+import com.Article.Web.Site.dto.response.ArticleInfoResponseDto;
+import com.Article.Web.Site.dto.response.ArticleResponseDto;
+import com.Article.Web.Site.dto.response.ImageResponseDto;
 import com.Article.Web.Site.model.ArticleEntity;
 import com.Article.Web.Site.service.AccountService;
 import com.Article.Web.Site.service.CategoryService;

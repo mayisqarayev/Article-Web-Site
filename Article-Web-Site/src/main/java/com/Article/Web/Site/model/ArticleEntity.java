@@ -1,6 +1,5 @@
 package com.Article.Web.Site.model;
 
-import com.Article.Web.Site.dto.ImageResponseDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;

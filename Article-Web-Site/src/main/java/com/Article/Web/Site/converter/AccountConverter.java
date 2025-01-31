@@ -1,9 +1,7 @@
 package com.Article.Web.Site.converter;
 
-import com.Article.Web.Site.dto.AccountResponseDto;
+import com.Article.Web.Site.dto.response.AccountResponseDto;
 import com.Article.Web.Site.model.AccountEntity;
-import com.Article.Web.Site.service.FollowService;
-import jakarta.persistence.Convert;
 import org.springframework.stereotype.Component;
 
 @Component
