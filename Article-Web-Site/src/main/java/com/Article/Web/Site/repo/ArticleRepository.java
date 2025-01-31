@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<ArticleEntity, String> {
@@ -28,5 +29,11 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, String> 
         select a from ArticleEntity as a
         where a.countOfReaders = (select max(a.countOfReaders) from ArticleEntity a)
     """)
-    ArticleEntity findMostReadedArticleEntity();
+    Optional<ArticleEntity> findMostReadedArticleEntity();
+
+    @Query("""
+        select a from ArticleEntity as a
+        where a.countOfLikes = (select max(a.countOfLikes) from ArticleEntity a)
+    """)
+    Optional<ArticleEntity> findMostLikedArticleEntity();
 }

@@ -75,9 +75,12 @@ public class ArticleService {
     }
 
     public ArticleResponseDto getMostReadedArticle() {
-        return converter.toArticleResponseDtoFromEntity(repository.findMostReadedArticleEntity());
+        return converter.toArticleResponseDtoFromEntity(repository.findMostReadedArticleEntity().get());
     }
 
+    public ArticleResponseDto getMostLikedArticle() {
+        return converter.toArticleResponseDtoFromEntity(repository.findMostLikedArticleEntity().get());
+    }
     public List<ArticleResponseDto> getArticlesByAccountId(String accountId) {
         return repository.findAll().stream()
                 .filter(entity -> entity.getFkAccountId().equals(accountId))
@@ -102,7 +105,4 @@ public class ArticleService {
                                 .collect(Collectors.toList())
                 ).build();
     }
-
-
-
 }
