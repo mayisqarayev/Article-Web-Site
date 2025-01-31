@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +43,20 @@ public class ArticleService {
         repository.deleteArticleEntityById(id);
     }
 
+    public void updateArticle(UpdateArticleRequestDto requestDto) {
+        ArticleEntity entity = repository.findById(requestDto.getId()).get();
+        entity.setArticleHeader(requestDto.getArticleHeader());
+        entity.setArticleText(requestDto.getArticleText());
+        entity.setArticleDeploymentDate(requestDto.getArticleDeploymentDate());
+        repository.save(entity);
+    }
+
+    public void increaseCountOfReadById(String id) {
+        ArticleEntity entity = repository.findById(id).get();
+        entity.setCountOfReaders(entity.getCountOfReaders().add(BigDecimal.valueOf(1)));
+        repository.save(entity);
+    }
+
     public ArticleInfoResponseDto getArticleById(String id) {
         return converter.toArticleInfoResponseDtoFromEntity(repository.findById(id).get());
     }
@@ -67,6 +84,30 @@ public class ArticleService {
                 ).build();
     }
 
+    public List<ArticleResponseDto> getTrendingArticlesByCount(Long count) {//Algorithm = read*0.5 + like*2 + comment*3
+        return repository.findAll().stream()
+                .sorted(Comparator.comparing((ArticleEntity article) ->
+                        article.getCountOfReaders().multiply(BigDecimal.valueOf(0.5))
+                                .add(article.getCountOfLikes().multiply(BigDecimal.valueOf(2)))
+                                .add(article.getCountOfComments().multiply(BigDecimal.valueOf(3)))).reversed())
+                .map(converter::toArticleResponseDtoFromEntity)
+                .limit(count)
+                .toList();
+    }
+
+    public List<ArticleResponseDto> getRecommendedArticlesByAccountId(String accountId) {
+        List<String> preferredCategories = repository.findAll().stream()
+                .filter(entity -> entity.getFkAccountId().equals(accountId))
+                .map(ArticleEntity::getFkCategoryId)
+                .distinct().toList();
+
+        return repository.findAll().stream()
+                .filter(entity -> preferredCategories.contains(entity.getFkCategoryId()))
+                .map(converter::toArticleResponseDtoFromEntity)
+                .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
+                .collect(Collectors.toList());
+    }
+
     public List<ArticleResponseDto> getArticlesMostReaded() {
         return repository.findAll().stream()
                 .map(converter::toArticleResponseDtoFromEntity)
@@ -81,6 +122,7 @@ public class ArticleService {
     public ArticleResponseDto getMostLikedArticle() {
         return converter.toArticleResponseDtoFromEntity(repository.findMostLikedArticleEntity().get());
     }
+
     public List<ArticleResponseDto> getArticlesByAccountId(String accountId) {
         return repository.findAll().stream()
                 .filter(entity -> entity.getFkAccountId().equals(accountId))
@@ -105,4 +147,6 @@ public class ArticleService {
                                 .collect(Collectors.toList())
                 ).build();
     }
+
+
 }
