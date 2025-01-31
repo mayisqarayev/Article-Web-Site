@@ -16,12 +16,13 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
-
     private final ArticleRepository repository;
+
     private final ArticleConverter converter;
     private final ImageService imageService;
 
@@ -54,14 +55,18 @@ public class ArticleService {
         repository.save(entity);
     }
 
-    public void increaseCountOfReadById(String id) {
+    private void increaseCountOfReadById(String id) {
         ArticleEntity entity = repository.findById(id).get();
         entity.setCountOfReaders(entity.getCountOfReaders().add(BigDecimal.valueOf(1)));
         repository.save(entity);
     }
 
     public ArticleInfoResponseDto getArticleById(String id) {
-        return converter.toArticleInfoResponseDtoFromEntity(repository.findById(id).get());
+        return converter.toArticleInfoResponseDtoFromEntity(repository.findById(id).get())
+                .apply(responseDto -> {
+                    increaseCountOfReadById(id);
+                    return responseDto;
+                });
     }
 
     public List<ArticleResponseDto> getArticles() {
