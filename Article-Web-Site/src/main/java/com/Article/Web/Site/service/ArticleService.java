@@ -8,6 +8,7 @@ import com.Article.Web.Site.dto.response.ArticleInfoResponseDto;
 import com.Article.Web.Site.dto.response.ArticlePageResponseDto;
 import com.Article.Web.Site.dto.response.ArticleResponseDto;
 import com.Article.Web.Site.model.ArticleEntity;
+import com.Article.Web.Site.model.LikeEntity;
 import com.Article.Web.Site.repo.ArticleRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +26,13 @@ public class ArticleService {
 
     private final ArticleConverter converter;
     private final ImageService imageService;
+    private final LikeService likeService;
 
-    public ArticleService(ArticleRepository repository, ArticleConverter converter, ImageService imageService) {
+    public ArticleService(ArticleRepository repository, ArticleConverter converter, ImageService imageService, LikeService likeService) {
         this.repository = repository;
         this.converter = converter;
         this.imageService = imageService;
+        this.likeService = likeService;
     }
 
     public void addArticle(AddArticleRequestDto requestDto) {
@@ -71,6 +74,21 @@ public class ArticleService {
 
     public List<ArticleResponseDto> getArticles() {
         return repository.findAll().stream()
+                .map(converter::toArticleResponseDtoFromEntity)
+                .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public List<ArticleResponseDto> getLikedArticlesByAccountId(String accountId) {
+        List<LikeEntity> likes = likeService.getLikes();
+
+        List<String> articleIds = likes.stream()
+                .filter(like -> like.getFkLikerAccountId().equals(accountId))
+                .map(LikeEntity::getFkLikedArticleId)
+                .distinct().toList();
+
+        return repository.findAll().stream()
+                .filter(entity -> articleIds.contains(entity.getId()))
                 .map(converter::toArticleResponseDtoFromEntity)
                 .sorted(Comparator.comparing(ArticleResponseDto::getArticleDeploymentDate).reversed())
                 .collect(Collectors.toList());
@@ -158,5 +176,9 @@ public class ArticleService {
 
     protected void updateArticleCommentCountById(String id) {
         repository.updateCountOfCommentsById(id);
+    }
+
+    protected void updateArticleLikeCountById(String id) {
+        repository.updateCountOfLikesById(id);
     }
 }

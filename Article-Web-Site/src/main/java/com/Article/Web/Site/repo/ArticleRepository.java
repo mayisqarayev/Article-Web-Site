@@ -16,6 +16,12 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, String> 
 
     @Modifying
     @Query("""
+        update ArticleEntity a set a.countOfLikes = a.countOfLikes + 1 where a.id = ?1
+    """)
+    void updateCountOfLikesById(String id);
+
+    @Modifying
+    @Query("""
         update ArticleEntity a set a.countOfComments = a.countOfComments + 1 where a.id = ?1
     """)
     void updateCountOfCommentsById(String id);

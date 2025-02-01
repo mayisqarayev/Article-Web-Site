@@ -54,4 +54,12 @@ public class CommentService {
                 .sorted(Comparator.comparing(CommentResponseDto::getDeployDate).reversed())
                 .collect(Collectors.toList());
     }
+
+    public List<CommentResponseDto> getCommentsByAccountId(String accountId) {
+        return repository.findAll().stream()
+                .filter(commentEntity -> commentEntity.getFkSenderAccountId().equals(accountId))
+                .map(converter::toCommentResponseDtoFromEntity)
+                .sorted(Comparator.comparing(CommentResponseDto::getDeployDate).reversed())
+                .collect(Collectors.toList());
+    }
 }
