@@ -155,4 +155,8 @@ public class ArticleService {
                                 .collect(Collectors.toList())
                 ).build();
     }
+
+    protected void updateArticleCommentCountById(String id) {
+        repository.updateCountOfCommentsById(id);
+    }
 }

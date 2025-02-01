@@ -13,6 +13,13 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends JpaRepository<ArticleEntity, String> {
 
+
+    @Modifying
+    @Query("""
+        update ArticleEntity a set a.countOfComments = a.countOfComments + 1 where a.id = ?1
+    """)
+    void updateCountOfCommentsById(String id);
+
     @Modifying
     @Query("""
         update ArticleEntity a set a.images = ?2 where a.id = ?1

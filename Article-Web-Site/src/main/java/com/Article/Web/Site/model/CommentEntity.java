@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -17,6 +18,8 @@ public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    private String commentText;
+    private LocalDateTime deployDate;
 
     @Column(name = "comment_status")
     private Boolean commentStatus;
@@ -30,22 +33,24 @@ public class CommentEntity {
     public CommentEntity() {
     }
 
-    public CommentEntity(String id, Boolean commentStatus, String fkSenderAccountId, String fkReceiverArticleId) {
-        this.id = id;
-        this.commentStatus = commentStatus;
-        this.fkSenderAccountId = fkSenderAccountId;
-        this.fkReceiverArticleId = fkReceiverArticleId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CommentEntity that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(commentStatus, that.commentStatus) && Objects.equals(fkSenderAccountId, that.fkSenderAccountId) && Objects.equals(fkReceiverArticleId, that.fkReceiverArticleId);
+        return Objects.equals(id, that.id) && Objects.equals(commentText, that.commentText) && Objects.equals(deployDate, that.deployDate) && Objects.equals(commentStatus, that.commentStatus) && Objects.equals(fkSenderAccountId, that.fkSenderAccountId) && Objects.equals(fkReceiverArticleId, that.fkReceiverArticleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, commentStatus, fkSenderAccountId, fkReceiverArticleId);
+        return Objects.hash(id, commentText, deployDate, commentStatus, fkSenderAccountId, fkReceiverArticleId);
+    }
+
+    public CommentEntity(String id, String commentText, LocalDateTime deployDate, Boolean commentStatus, String fkSenderAccountId, String fkReceiverArticleId) {
+        this.id = id;
+        this.commentText = commentText;
+        this.deployDate = deployDate;
+        this.commentStatus = commentStatus;
+        this.fkSenderAccountId = fkSenderAccountId;
+        this.fkReceiverArticleId = fkReceiverArticleId;
     }
 }
