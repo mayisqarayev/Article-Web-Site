@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface LikeRepository extends JpaRepository<LikeEntity, String> {
     @Modifying
     @Query("""
-        update LikeEntity l set l.likeStatus = false where l.id = ?1
+        update LikeEntity l set l.likeStatus = true where l.id = ?1
     """)
     void updateStatusById(String id);
 

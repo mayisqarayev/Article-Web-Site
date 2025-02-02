@@ -1,6 +1,7 @@
 package com.Article.Web.Site.dto.response;
 
 import com.Article.Web.Site.dto.response.AccountResponseDto;
+import com.Article.Web.Site.service.ScopedFunctions;
 import lombok.Builder;
 import lombok.Data;
 
@@ -25,5 +26,9 @@ public class ArticleResponseDto {
         this.countOfReaders = countOfReaders;
         this.countOfLikes = countOfLikes;
         this.account = account;
+    }
+
+    public ArticleResponseDto apply(ScopedFunctions<ArticleResponseDto> scope) {
+        return scope.apply(this);
     }
 }

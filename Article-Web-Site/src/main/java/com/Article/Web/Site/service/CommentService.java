@@ -43,7 +43,7 @@ public class CommentService {
         articleService.updateArticleCommentCountById(requestDto.getFkReceiverArticleId());
     }
 
-    public void deleteCommentById(String id) {
+    public void deleteComment(String id) {
         repository.deleteCommentById(id);
     }
 

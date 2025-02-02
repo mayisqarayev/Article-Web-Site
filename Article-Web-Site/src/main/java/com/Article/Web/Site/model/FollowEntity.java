@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -17,6 +18,7 @@ public class FollowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    private LocalDateTime followDate;
 
     @Column(name = "follow_status")
     private Boolean followStatus;
@@ -30,8 +32,9 @@ public class FollowEntity {
     public FollowEntity() {
     }
 
-    public FollowEntity(String id, Boolean followStatus, String fkFollowerAccountId, String fkFollowedAccountId) {
+    public FollowEntity(String id, LocalDateTime followDate, Boolean followStatus, String fkFollowerAccountId, String fkFollowedAccountId) {
         this.id = id;
+        this.followDate = followDate;
         this.followStatus = followStatus;
         this.fkFollowerAccountId = fkFollowerAccountId;
         this.fkFollowedAccountId = fkFollowedAccountId;
@@ -41,11 +44,11 @@ public class FollowEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof FollowEntity that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(followStatus, that.followStatus) && Objects.equals(fkFollowerAccountId, that.fkFollowerAccountId) && Objects.equals(fkFollowedAccountId, that.fkFollowedAccountId);
+        return Objects.equals(id, that.id) && Objects.equals(followDate, that.followDate) && Objects.equals(followStatus, that.followStatus) && Objects.equals(fkFollowerAccountId, that.fkFollowerAccountId) && Objects.equals(fkFollowedAccountId, that.fkFollowedAccountId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, followStatus, fkFollowerAccountId, fkFollowedAccountId);
+        return Objects.hash(id, followDate, followStatus, fkFollowerAccountId, fkFollowedAccountId);
     }
 }

@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
     private final ArticleRepository repository;
-
     private final ArticleConverter converter;
     private final ImageService imageService;
     private final LikeService likeService;
@@ -142,11 +141,15 @@ public class ArticleService {
     }
 
     public ArticleResponseDto getMostReadedArticle() {
-        return converter.toArticleResponseDtoFromEntity(repository.findMostReadedArticleEntity().get());
+        ArticleEntity entity = repository.findMostReadedArticleEntity().get();
+        increaseCountOfReadById(entity.getId());
+        return converter.toArticleResponseDtoFromEntity(entity);
     }
 
     public ArticleResponseDto getMostLikedArticle() {
-        return converter.toArticleResponseDtoFromEntity(repository.findMostLikedArticleEntity().get());
+        ArticleEntity entity = repository.findMostLikedArticleEntity().get();
+        increaseCountOfReadById(entity.getId());
+        return converter.toArticleResponseDtoFromEntity(entity);
     }
 
     public List<ArticleResponseDto> getArticlesByAccountId(String accountId) {

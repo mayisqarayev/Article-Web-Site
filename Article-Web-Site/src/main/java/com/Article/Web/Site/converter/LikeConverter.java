@@ -11,6 +11,7 @@ public class LikeConverter {
         return LikeEntity.builder()
                 .fkLikerAccountId(requestDto.getFkLikedArticleId())
                 .fkLikedArticleId(requestDto.getFkLikedArticleId())
+                .likeStatus(true)
                 .build();
     }
 }
