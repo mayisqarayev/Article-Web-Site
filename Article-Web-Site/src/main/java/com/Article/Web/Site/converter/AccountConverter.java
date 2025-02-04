@@ -1,10 +1,9 @@
 package com.Article.Web.Site.converter;
 
-import com.Article.Web.Site.dto.request.AccountRequestDto;
 import com.Article.Web.Site.dto.request.CreateAccountRequestDto;
 import com.Article.Web.Site.dto.response.AccountResponseDto;
 import com.Article.Web.Site.model.AccountEntity;
-import com.Article.Web.Site.service.AccountService;
+import com.Article.Web.Site.service.AccountNumberService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -13,11 +12,12 @@ import java.time.LocalDate;
 @Component
 public class AccountConverter {
 
-    private final AccountService accountService;
+    private final AccountNumberService numberService;
 
-    public AccountConverter(AccountService accountService) {
-        this.accountService = accountService;
+    public AccountConverter(AccountNumberService numberService) {
+        this.numberService = numberService;
     }
+
 
     public AccountResponseDto toAccountResponseDtoFromEntity(AccountEntity entity) {
         return AccountResponseDto.builder()
@@ -26,6 +26,17 @@ public class AccountConverter {
                 .photoUrl(entity.getAccountProfilePhotoUrl()).build();
     }
 
-
+    public AccountEntity toEntityFromCreateAccountRequestDto(CreateAccountRequestDto requestDto) {
+        return AccountEntity.builder()
+                .accountName(requestDto.getAccountName())
+                .accountDescription("Description Not Setted")
+                .accountEmail(requestDto.getAccountEmail())
+                .accountCreationDate(LocalDate.now())
+                .accountStatus(true)
+                .countOfFollowers(BigDecimal.ZERO)
+                .accountNumber(numberService.generateAccountNumber())
+                .accountProfilePhotoUrl(requestDto.getAccountProfilePhotoUrl())
+                .fkUserId(requestDto.getFkUserId()).build();
+    }
 
 }

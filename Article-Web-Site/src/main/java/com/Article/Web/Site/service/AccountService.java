@@ -1,10 +1,12 @@
 package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.AccountConverter;
+import com.Article.Web.Site.dto.request.AccountNumberRequestDto;
 import com.Article.Web.Site.dto.request.AccountRequestDto;
 import com.Article.Web.Site.dto.request.CreateAccountRequestDto;
 import com.Article.Web.Site.dto.response.AccountResponseDto;
 import com.Article.Web.Site.exception.InvalidArgumentException;
+import com.Article.Web.Site.model.AccountEntity;
 import com.Article.Web.Site.model.FollowEntity;
 import com.Article.Web.Site.model.UserEntity;
 import com.Article.Web.Site.repo.AccountRepository;
@@ -22,14 +24,17 @@ public class AccountService {
     private final AccountRepository repository;
     private final AccountConverter converter;
     private final FollowService followService;
-    private final RoleService roleService;
+    private final AccountNumberService numberService;
+    private final UserService userService;
 
-    public AccountService(AccountRepository repository, AccountConverter converter, FollowService followService, RoleService roleService) {
+    public AccountService(AccountRepository repository, AccountConverter converter, FollowService followService, AccountNumberService numberService, UserService userService) {
         this.repository = repository;
         this.converter = converter;
         this.followService = followService;
-        this.roleService = roleService;
+        this.numberService = numberService;
+        this.userService = userService;
     }
+
 
     public AccountResponseDto getAccountById(String id) {
         return converter.toAccountResponseDtoFromEntity(repository.findById(id).get());
@@ -67,10 +72,16 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    public void createAccount(CreateAccountRequestDto requestDto) {
 
+        userService.validateUserById(requestDto.getFkUserId());
 
-    public String generateAccountNumber() {
-        return UUID.randomUUID().toString();
+        AccountEntity entity = repository.save(converter.toEntityFromCreateAccountRequestDto(requestDto));
+        numberService.saveNumber(
+                AccountNumberRequestDto.builder()
+                        .number(entity.getAccountNumber())
+                        .accountId(entity.getId())
+                        .build()
+        );
     }
-
 }
