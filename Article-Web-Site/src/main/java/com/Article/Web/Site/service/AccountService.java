@@ -4,7 +4,9 @@ import com.Article.Web.Site.converter.AccountConverter;
 import com.Article.Web.Site.dto.request.AccountNumberRequestDto;
 import com.Article.Web.Site.dto.request.AccountRequestDto;
 import com.Article.Web.Site.dto.request.CreateAccountRequestDto;
+import com.Article.Web.Site.dto.request.UpdateAccountRequestDto;
 import com.Article.Web.Site.dto.response.AccountResponseDto;
+import com.Article.Web.Site.exception.AccountNotFoundException;
 import com.Article.Web.Site.exception.InvalidArgumentException;
 import com.Article.Web.Site.model.AccountEntity;
 import com.Article.Web.Site.model.FollowEntity;
@@ -35,13 +37,8 @@ public class AccountService {
         this.userService = userService;
     }
 
-
     public AccountResponseDto getAccountById(String id) {
         return converter.toAccountResponseDtoFromEntity(repository.findById(id).get());
-    }
-
-    protected void updateAccountFollowerCountById(String id) {
-        repository.updateCountOfFollowersById(id);
     }
 
     public List<AccountResponseDto> getFollowerAccountsById(String id) {
@@ -83,5 +80,35 @@ public class AccountService {
                         .accountId(entity.getId())
                         .build()
         );
+    }
+
+    public void deleteAccountById(String id) {
+        Optional.ofNullable(id).ifPresentOrElse(
+                action -> {
+                    repository.deleteAccountById(id);
+                },
+                () -> {
+                    throw new InvalidArgumentException("Id is null");
+                });
+    }
+
+    public void updateAccount(UpdateAccountRequestDto requestDto) {
+        Optional.ofNullable(requestDto).ifPresentOrElse(
+                action -> {
+                    repository.updateAccountById(
+                            requestDto.getId(),
+                            requestDto.getAccountName(),
+                            requestDto.getAccountDescription(),
+                            requestDto.getAccountEmail(),
+                            requestDto.getAccountProfilePhotoUrl());
+                },
+                () -> {
+                    throw new AccountNotFoundException("Account Not Found");
+                }
+        );
+    }
+
+    protected void updateAccountFollowerCountById(String id) {
+        repository.updateCountOfFollowersById(id);
     }
 }

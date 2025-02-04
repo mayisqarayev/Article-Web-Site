@@ -21,7 +21,7 @@ public class UserService {
         repository.save(converter.toEntityFromCreateUserRequestDto(requestDto));
     }
 
-    public void validateUserById(String id) {
+    protected void validateUserById(String id) {
         repository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found"));
     }
 }

@@ -14,4 +14,27 @@ public interface AccountRepository extends JpaRepository<AccountEntity, String> 
         update AccountEntity a set a.countOfFollowers = a.countOfFollowers + 1 where a.id = ?1
     """)
     void updateCountOfFollowersById(String id);
+
+    @Modifying
+    @Query("""
+        update AccountEntity a set a.accountStatus = false where a.id = ?1
+    """)
+    void deleteAccountById(String id);
+
+    @Modifying
+    @Query("""
+        update AccountEntity a set
+        a.accountName = ?2,  
+        a.accountDescription = ?3,
+        a.accountEmail = ?4,
+        a.accountProfilePhotoUrl = ?5 where a.id = ?1
+    """)
+    void updateAccountById(
+            String id,
+            String accountName,
+            String accountDescription,
+            String accountEmail,
+            String accountProfilePhotoUrl
+    );
+
 }
