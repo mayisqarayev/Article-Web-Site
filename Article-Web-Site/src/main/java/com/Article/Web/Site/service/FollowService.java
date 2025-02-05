@@ -46,7 +46,7 @@ public class FollowService {
         accountService.decreaseAccountFollowerCountById(followEntity.getFkFollowedAccountId());
     }
 
-    public void deleteFollowByFollowerId(String followerId) {
+    public void deleteFollowsByFollowerId(String followerId) {
         repository.unFollowsAccountsById(followerId);
     }
 

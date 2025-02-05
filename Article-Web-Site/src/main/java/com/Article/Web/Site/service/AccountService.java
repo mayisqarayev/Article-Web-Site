@@ -125,7 +125,7 @@ public class AccountService {
             willBeDeletedAccounts.forEach(account -> {
                 account.setAccountStatus(false);
                 articleService.deleteArticlesByAccountId(account.getId());
-                followService.deleteFollowByFollowerId(account.getId());
+                followService.deleteFollowsByFollowerId(account.getId());
                 likeService.deleteLikesByLikerId(account.getId());
                 commentService.deleteCommentsBySenderId(account.getId());
                 saveService.deleteSavesBySaverId(account.getId());
@@ -181,7 +181,7 @@ public class AccountService {
                 action -> {
                     repository.deleteAccountById(id);
                     articleService.deleteArticlesByAccountId(id);
-                    followService.deleteFollowByFollowerId(id);
+                    followService.deleteFollowsByFollowerId(id);
                     likeService.deleteLikesByLikerId(id);
                     commentService.deleteCommentsBySenderId(id);
                     saveService.deleteSavesBySaverId(id);
