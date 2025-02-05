@@ -13,8 +13,13 @@ public interface AccountRepository extends JpaRepository<AccountEntity, String> 
     @Query("""
         update AccountEntity a set a.countOfFollowers = a.countOfFollowers + 1 where a.id = ?1
     """)
-    void updateCountOfFollowersById(String id);
+    void increaseCountOfFollowersById(String id);
 
+    @Modifying
+    @Query("""
+         update AccountEntity a set a.countOfFollowers = a.countOfFollowers - 1 where a.id = ?1
+    """)
+    void decreaseAccountFollowerCountById(String id);
     @Modifying
     @Query("""
         update AccountEntity a set a.accountStatus = false where a.id = ?1

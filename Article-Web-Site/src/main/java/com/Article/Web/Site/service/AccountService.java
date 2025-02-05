@@ -108,7 +108,11 @@ public class AccountService {
         );
     }
 
-    protected void updateAccountFollowerCountById(String id) {
-        repository.updateCountOfFollowersById(id);
+    protected void increaseAccountFollowerCountById(String id) {
+        repository.increaseCountOfFollowersById(id);
+    }
+
+    protected void decreaseAccountFollowerCountById(String id) {
+        repository.decreaseAccountFollowerCountById(id);
     }
 }

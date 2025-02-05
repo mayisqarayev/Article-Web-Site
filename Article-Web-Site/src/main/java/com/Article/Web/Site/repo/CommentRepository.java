@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, String> {
 
@@ -17,5 +19,5 @@ public interface CommentRepository extends JpaRepository<CommentEntity, String> 
 
     @Modifying
     @Query("update CommentEntity c set c.commentStatus = false where c.id = ?1")
-    void deleteCommentById(String id);
+    Optional<CommentEntity> deleteCommentById(String id);
 }

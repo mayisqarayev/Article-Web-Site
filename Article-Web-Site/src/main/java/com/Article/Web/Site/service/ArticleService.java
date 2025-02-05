@@ -177,11 +177,19 @@ public class ArticleService {
                 ).build();
     }
 
-    protected void updateArticleCommentCountById(String id) {
-        repository.updateCountOfCommentsById(id);
+    protected void increaseArticleCommentCountById(String id) {
+        repository.increaseCountOfCommentsById(id);
     }
 
-    protected void updateArticleLikeCountById(String id) {
-        repository.updateCountOfLikesById(id);
+    protected void decreaseArticleCommentCountById(String id) {
+        repository.decreaseArticleCommentCountById(id);
+    }
+
+    protected void increaseArticleLikeCountById(String id) {
+        repository.increaseArticleLikeCountById(id);
+    }
+
+    protected void decreaseArticleLikeCountById(String id) {
+        repository.decreaseArticleLikeCountById(id);
     }
 }

@@ -2,12 +2,14 @@ package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.FollowConverter;
 import com.Article.Web.Site.dto.request.FollowRequestDto;
+import com.Article.Web.Site.model.AccountEntity;
 import com.Article.Web.Site.model.FollowEntity;
 import com.Article.Web.Site.repo.FollowRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FollowService {
@@ -36,11 +38,12 @@ public class FollowService {
         });
 
         repository.save(converter.toEntityFromFollowRequestDto(requestDto));
-        accountService.updateAccountFollowerCountById(requestDto.getFkFollowedAccountId());
+        accountService.increaseAccountFollowerCountById(requestDto.getFkFollowedAccountId());
     }
 
     public void unFollow(String id) {
-        repository.unFollowAccountById(id);
+        FollowEntity followEntity = repository.unFollowAccountById(id).get();
+        accountService.decreaseAccountFollowerCountById(followEntity.getFkFollowedAccountId());
     }
 
     protected List<FollowEntity> getFollows() {

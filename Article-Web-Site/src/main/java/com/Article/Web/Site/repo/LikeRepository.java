@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, String> {
     @Modifying
@@ -18,5 +21,5 @@ public interface LikeRepository extends JpaRepository<LikeEntity, String> {
     @Query("""
         update LikeEntity l set l.likeStatus = false where l.id = ?1
     """)
-    void unLikeArticleById(String id);
+    Optional<LikeEntity> unLikeArticleById(String id);
 }

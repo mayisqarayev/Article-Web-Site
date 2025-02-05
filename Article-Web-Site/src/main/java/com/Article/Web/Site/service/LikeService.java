@@ -36,11 +36,12 @@ public class LikeService {
         });
 
         repository.save(converter.toEntityFromLikeRequestDto(requestDto));
-        articleService.updateArticleLikeCountById(requestDto.getFkLikedArticleId());
+        articleService.increaseArticleLikeCountById(requestDto.getFkLikedArticleId());
     }
 
     public void unLikeArticle(String id) {
-        repository.unLikeArticleById(id);
+        LikeEntity likeEntity = repository.unLikeArticleById(id).get();
+        articleService.decreaseArticleLikeCountById(likeEntity.getFkLikedArticleId());
     }
 
     protected List<LikeEntity> getLikes() {

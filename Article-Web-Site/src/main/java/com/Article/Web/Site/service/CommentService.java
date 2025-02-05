@@ -40,11 +40,12 @@ public class CommentService {
         });
 
         repository.save(converter.toEntityFromSendCommentRequestDto(requestDto));
-        articleService.updateArticleCommentCountById(requestDto.getFkReceiverArticleId());
+        articleService.increaseArticleCommentCountById(requestDto.getFkReceiverArticleId());
     }
 
     public void deleteComment(String id) {
-        repository.deleteCommentById(id);
+        CommentEntity commentEntity = repository.deleteCommentById(id).get();
+        articleService.decreaseArticleCommentCountById(commentEntity.getFkReceiverArticleId());
     }
 
     public List<CommentResponseDto> getCommentsByArticleId(String articleId) {
