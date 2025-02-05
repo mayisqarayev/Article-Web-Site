@@ -1,12 +1,11 @@
 package com.Article.Web.Site.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.Article.Web.Site.service.LikeService;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +23,9 @@ public class UserEntity {
     private boolean isAccountNonLocked;
     private boolean isCredentialNonExpired;
     private String authority;
+
+    @OneToMany(mappedBy = "fkUserId", targetEntity = AccountEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<AccountEntity> accounts;
 
     public UserEntity() {
     }

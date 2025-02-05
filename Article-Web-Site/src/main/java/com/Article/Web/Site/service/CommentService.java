@@ -48,6 +48,10 @@ public class CommentService {
         articleService.decreaseArticleCommentCountById(commentEntity.getFkReceiverArticleId());
     }
 
+    public void deleteCommentsBySenderId(String senderId) {
+        repository.deleteCommentsById(senderId);
+    }
+
     public List<CommentResponseDto> getCommentsByArticleId(String articleId) {
         return repository.findAll().stream()
                 .filter(commentEntity -> commentEntity.getFkReceiverArticleId().equals(articleId))

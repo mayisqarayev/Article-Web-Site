@@ -44,6 +44,10 @@ public class LikeService {
         articleService.decreaseArticleLikeCountById(likeEntity.getFkLikedArticleId());
     }
 
+    public void deleteLikesByLikerId(String likerId) {
+        repository.unLikesArticlesById(likerId);
+    }
+
     protected List<LikeEntity> getLikes() {
         return repository.findAll();
     }

@@ -16,6 +16,12 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, String> 
 
     @Modifying
     @Query("""
+        update ArticleEntity a set a.articleStatus = false where a.fkAccountId = ?1
+    """)
+    void deleteArticlesById(String accountId);
+
+    @Modifying
+    @Query("""
         update ArticleEntity a set a.countOfLikes = a.countOfLikes + 1 where a.id = ?1
     """)
     void increaseArticleLikeCountById(String id);

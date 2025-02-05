@@ -18,6 +18,12 @@ public interface CommentRepository extends JpaRepository<CommentEntity, String> 
     void updateStatusById(String id);
 
     @Modifying
+    @Query("""
+        update CommentEntity c set c.commentStatus = false where c.fkSenderAccountId = ?1
+    """)
+    void deleteCommentsById(String senderId);
+
+    @Modifying
     @Query("update CommentEntity c set c.commentStatus = false where c.id = ?1")
     Optional<CommentEntity> deleteCommentById(String id);
 }

@@ -21,6 +21,12 @@ public interface FollowRepository extends JpaRepository<FollowEntity, String> {
 
     @Modifying
     @Query("""
+        update FollowEntity f set f.followStatus = false where f.fkFollowerAccountId = ?1
+    """)
+    void unFollowsAccountsById(String followerId);
+
+    @Modifying
+    @Query("""
         update FollowEntity f set f.followStatus = false where f.id = ?1
     """)
     Optional<FollowEntity> unFollowAccountById(String id);

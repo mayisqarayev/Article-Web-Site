@@ -19,6 +19,12 @@ public interface LikeRepository extends JpaRepository<LikeEntity, String> {
 
     @Modifying
     @Query("""
+        update LikeEntity l set l.likeStatus = false where l.fkLikerAccountId = ?1
+    """)
+    void unLikesArticlesById(String likerId);
+
+    @Modifying
+    @Query("""
         update LikeEntity l set l.likeStatus = false where l.id = ?1
     """)
     Optional<LikeEntity> unLikeArticleById(String id);

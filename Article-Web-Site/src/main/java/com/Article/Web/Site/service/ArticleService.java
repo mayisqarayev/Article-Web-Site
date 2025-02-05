@@ -49,6 +49,10 @@ public class ArticleService {
         repository.deleteArticleEntityById(id);
     }
 
+    public void deleteArticlesByAccountId(String accountId) {
+        repository.deleteArticlesById(accountId);
+    }
+
     public void updateArticle(UpdateArticleRequestDto requestDto) {
         ArticleEntity entity = repository.findById(requestDto.getId()).get();
         entity.setArticleHeader(requestDto.getArticleHeader());
