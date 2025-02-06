@@ -104,6 +104,21 @@ public class AccountService {
         return (account.getCountOfFollowers().doubleValue() * 10)/ (accountAgeDays + 1);
     }
 
+    public void deleteAccountById(String id) {
+        Optional.ofNullable(id).ifPresentOrElse(
+                action -> {
+                    repository.deleteAccountById(id);
+                    articleService.deleteArticlesByAccountId(id);
+                    followService.deleteFollowsByFollowerId(id);
+                    likeService.deleteLikesByLikerId(id);
+                    commentService.deleteCommentsBySenderId(id);
+                    saveService.deleteSavesBySaverId(id);
+                },
+                () -> {
+                    throw new InvalidArgumentException("Id is null");
+                });
+    }
+
     @Async
     public CompletableFuture<Void> batchDeleteAccountsByIds(List<String> ids) {
         Optional.ofNullable(ids)
@@ -171,21 +186,6 @@ public class AccountService {
                         .accountId(entity.getId())
                         .build()
         );
-    }
-
-    public void deleteAccountById(String id) {
-        Optional.ofNullable(id).ifPresentOrElse(
-                action -> {
-                    repository.deleteAccountById(id);
-                    articleService.deleteArticlesByAccountId(id);
-                    followService.deleteFollowsByFollowerId(id);
-                    likeService.deleteLikesByLikerId(id);
-                    commentService.deleteCommentsBySenderId(id);
-                    saveService.deleteSavesBySaverId(id);
-                },
-                () -> {
-                    throw new InvalidArgumentException("Id is null");
-                });
     }
 
     public void updateAccount(UpdateAccountRequestDto requestDto) {
