@@ -26,12 +26,14 @@ public class ArticleService {
     private final ArticleConverter converter;
     private final ImageService imageService;
     private final LikeService likeService;
+    private final TagService tagService;
 
-    public ArticleService(ArticleRepository repository, ArticleConverter converter, ImageService imageService, LikeService likeService) {
+    public ArticleService(ArticleRepository repository, ArticleConverter converter, ImageService imageService, LikeService likeService, TagService tagService) {
         this.repository = repository;
         this.converter = converter;
         this.imageService = imageService;
         this.likeService = likeService;
+        this.tagService = tagService;
     }
 
     public void addArticle(AddArticleRequestDto requestDto) {
@@ -43,6 +45,7 @@ public class ArticleService {
                         .map(imageService::transformImageEntity)
                         .collect(Collectors.toList())
         );
+        tagService.addTags(requestDto.getTags());
     }
 
     public void deleteArticleById(String id) {
