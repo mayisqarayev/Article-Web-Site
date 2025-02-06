@@ -7,6 +7,7 @@ import com.Article.Web.Site.dto.response.ImageResponseDto;
 import com.Article.Web.Site.model.ArticleEntity;
 import com.Article.Web.Site.service.AccountService;
 import com.Article.Web.Site.service.CategoryService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -20,7 +21,7 @@ public class ArticleConverter {
     private final AccountService accountService;
     private final CategoryService categoryService;
 
-    public ArticleConverter(AccountService accountService, CategoryService categoryService) {
+    public ArticleConverter(@Lazy AccountService accountService, CategoryService categoryService) {
         this.accountService = accountService;
         this.categoryService = categoryService;
     }

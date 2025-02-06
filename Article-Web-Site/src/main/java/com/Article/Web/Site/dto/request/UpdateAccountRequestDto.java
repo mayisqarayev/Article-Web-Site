@@ -17,22 +17,11 @@ public class UpdateAccountRequestDto {
     private String accountEmail;
     private String accountProfilePhotoUrl;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UpdateAccountRequestDto that)) return false;
-        return Objects.equals(accountName, that.accountName) && Objects.equals(accountDescription, that.accountDescription) && Objects.equals(accountEmail, that.accountEmail) && Objects.equals(accountProfilePhotoUrl, that.accountProfilePhotoUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(accountName, accountDescription, accountEmail, accountProfilePhotoUrl);
-    }
-
     public UpdateAccountRequestDto() {
     }
 
-    public UpdateAccountRequestDto(String accountName, String accountDescription, String accountEmail, String accountProfilePhotoUrl) {
+    public UpdateAccountRequestDto(String id, String accountName, String accountDescription, String accountEmail, String accountProfilePhotoUrl) {
+        this.id = id;
         this.accountName = accountName;
         this.accountDescription = accountDescription;
         this.accountEmail = accountEmail;

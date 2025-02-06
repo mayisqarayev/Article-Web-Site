@@ -4,6 +4,7 @@ import com.Article.Web.Site.dto.request.SendCommentRequestDto;
 import com.Article.Web.Site.dto.response.CommentResponseDto;
 import com.Article.Web.Site.model.CommentEntity;
 import com.Article.Web.Site.service.AccountService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public class CommentConverter {
 
     private final AccountService accountService;
 
-    public CommentConverter(AccountService accountService) {
+    public CommentConverter(@Lazy AccountService accountService) {
         this.accountService = accountService;
     }
 

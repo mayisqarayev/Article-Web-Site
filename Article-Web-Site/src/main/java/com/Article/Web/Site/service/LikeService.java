@@ -4,6 +4,7 @@ import com.Article.Web.Site.converter.LikeConverter;
 import com.Article.Web.Site.dto.request.LikeRequestDto;
 import com.Article.Web.Site.model.LikeEntity;
 import com.Article.Web.Site.repo.LikeRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class LikeService {
     private final LikeConverter converter;
     private final ArticleService articleService;
 
-    public LikeService(LikeRepository repository, LikeConverter converter, ArticleService articleService) {
+    public LikeService(LikeRepository repository, LikeConverter converter,@Lazy ArticleService articleService) {
         this.repository = repository;
         this.converter = converter;
         this.articleService = articleService;

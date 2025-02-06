@@ -2,8 +2,10 @@ package com.Article.Web.Site.model;
 
 import com.Article.Web.Site.service.LikeService;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +13,8 @@ import java.util.Objects;
 @Entity
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEntity {
 
     @Id
@@ -26,20 +30,6 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "fkUserId", targetEntity = AccountEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AccountEntity> accounts;
-
-    public UserEntity() {
-    }
-
-    public UserEntity(String id, String username, String password, boolean isEnabled, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialNonExpired, String authority) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.isEnabled = isEnabled;
-        this.isAccountNonExpired = isAccountNonExpired;
-        this.isAccountNonLocked = isAccountNonLocked;
-        this.isCredentialNonExpired = isCredentialNonExpired;
-        this.authority = authority;
-    }
 
     @Override
     public boolean equals(Object o) {

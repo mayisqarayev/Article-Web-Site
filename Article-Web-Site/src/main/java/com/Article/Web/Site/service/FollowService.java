@@ -5,6 +5,7 @@ import com.Article.Web.Site.dto.request.FollowRequestDto;
 import com.Article.Web.Site.model.AccountEntity;
 import com.Article.Web.Site.model.FollowEntity;
 import com.Article.Web.Site.repo.FollowRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class FollowService {
     private final FollowConverter converter;
     private final AccountService accountService;
 
-    public FollowService(FollowRepository repository, FollowConverter converter, AccountService accountService) {
+    public FollowService(FollowRepository repository, FollowConverter converter,@Lazy AccountService accountService) {
         this.repository = repository;
         this.converter = converter;
         this.accountService = accountService;
