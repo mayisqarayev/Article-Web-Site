@@ -88,6 +88,7 @@ public class UserService {
     }
 
     protected void validateUserById(String id) {
+        Optional.ofNullable(id).orElseThrow(() -> new InvalidArgumentException("Id is null"));
         repository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found"));
     }
 }

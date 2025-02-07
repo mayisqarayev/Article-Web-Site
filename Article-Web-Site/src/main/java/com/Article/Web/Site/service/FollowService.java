@@ -2,6 +2,7 @@ package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.FollowConverter;
 import com.Article.Web.Site.dto.request.FollowRequestDto;
+import com.Article.Web.Site.exception.EmptyDataException;
 import com.Article.Web.Site.model.AccountEntity;
 import com.Article.Web.Site.model.FollowEntity;
 import com.Article.Web.Site.repo.FollowRepository;
@@ -52,6 +53,9 @@ public class FollowService {
     }
 
     protected List<FollowEntity> getFollows() {
-        return repository.findAll();
+        List<FollowEntity> follows = repository.findAll();
+        if(follows.isEmpty()) throw new EmptyDataException("Follows is empty");
+
+        return follows;
     }
 }

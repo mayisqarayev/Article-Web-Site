@@ -7,10 +7,7 @@ import com.Article.Web.Site.dto.request.TransferAccountRequestDto;
 import com.Article.Web.Site.dto.request.UpdateAccountRequestDto;
 import com.Article.Web.Site.dto.response.AccountResponseDto;
 import com.Article.Web.Site.dto.response.AccountInfoResponseDto;
-import com.Article.Web.Site.exception.AccountNotFoundException;
-import com.Article.Web.Site.exception.EmptyDataException;
-import com.Article.Web.Site.exception.InvalidArgumentException;
-import com.Article.Web.Site.exception.InvalidStateException;
+import com.Article.Web.Site.exception.*;
 import com.Article.Web.Site.model.AccountEntity;
 import com.Article.Web.Site.model.FollowEntity;
 import com.Article.Web.Site.repo.AccountRepository;
@@ -52,16 +49,28 @@ public class AccountService {
     }
 
     public AccountResponseDto getAccountById(String id) {
-        return converter.toAccountResponseDtoFromEntity(repository.findById(id).get());
+        Optional.ofNullable(id)
+                .orElseThrow(() -> new InvalidArgumentException("Id is null"));
+        return converter.toAccountResponseDtoFromEntity(repository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException("Account Not Found")));
     }
 
     public AccountInfoResponseDto getAccountInfoById(String id) {
-        Optional.ofNullable(id).orElseThrow(() -> new AccountNotFoundException("Account Not Found"));
-        return converter.toAccountInfoResponseDtoFromEntity(repository.findById(id).get());
+        Optional.ofNullable(id)
+                .orElseThrow(() -> new InvalidArgumentException("Id is null"));
+        return converter.toAccountInfoResponseDtoFromEntity(repository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException("Account Not Found")));
     }
 
     public List<AccountResponseDto> getAccountsByUserId(String userId) {
-        return repository.findAll().stream()
+        Optional.ofNullable(userId).
+                orElseThrow(() -> new InvalidArgumentException("UserId is null"));
+        List<AccountEntity> accounts = repository.findAll();
+
+        if(accounts.isEmpty())
+            throw new EmptyDataException("Accounts is empty");
+
+        return accounts.stream()
                 .filter(entity -> entity.getFkUserId().equals(userId))
                 .sorted(Comparator.comparing(AccountEntity::getAccountCreationDate).reversed())
                 .map(converter::toAccountResponseDtoFromEntity)
@@ -69,7 +78,12 @@ public class AccountService {
     }
 
     public List<AccountResponseDto> getMostPopularAccounts() {
-        return repository.findAll().stream()
+        List<AccountEntity> accounts = repository.findAll();
+
+        if(accounts.isEmpty())
+            throw new EmptyDataException("Accounts is empty");
+
+        return accounts.stream()
                 .sorted(Comparator.comparing(AccountEntity::getCountOfFollowers).reversed())
                 .map(converter::toAccountResponseDtoFromEntity)
                 .collect(Collectors.toList());
@@ -93,7 +107,6 @@ public class AccountService {
 
     @Cacheable(value = "popularityScore", key = "#id")
     public Double calculatePopularityScore(String id) {
-
         Optional.ofNullable(id)
                 .orElseThrow(() -> new InvalidArgumentException("Id is null"));
 
@@ -148,20 +161,32 @@ public class AccountService {
     }
 
     public List<AccountResponseDto> getFollowerAccountsById(String id) {
+        Optional.ofNullable(id)
+                .orElseThrow(() -> new InvalidArgumentException("Id is null"));
+
         List<FollowEntity> follows = followService.getFollows();
+
         List<String> followerIds = follows.stream()
                 .filter(follow -> follow.getFkFollowedAccountId().equals(id))
                 .sorted(Comparator.comparing(FollowEntity::getFollowDate).reversed())
                 .map(FollowEntity::getFkFollowerAccountId)
                 .distinct().toList();
 
-        return repository.findAll().stream()
+        if(followerIds.isEmpty()) throw new EmptyDataException("FollowerIds is empty");
+
+        List<AccountEntity> accounts = repository.findAll();
+        if(accounts.isEmpty()) throw new EmptyDataException("Accounts is empty");
+
+        return accounts.stream()
                 .filter(entity -> followerIds.contains(entity.getId()))
                 .map(converter::toAccountResponseDtoFromEntity)
                 .collect(Collectors.toList());
     }
 
     public List<AccountResponseDto> getFollowedAccountsById(String id) {
+        Optional.ofNullable(id)
+                .orElseThrow(() -> new InvalidArgumentException("Id is null"));
+
         List<FollowEntity> follows = followService.getFollows();
         List<String> followedIds = follows.stream()
                 .filter(follow -> follow.getFkFollowerAccountId().equals(id))
@@ -169,22 +194,33 @@ public class AccountService {
                 .map(FollowEntity::getFkFollowedAccountId)
                 .distinct().toList();
 
-        return repository.findAll().stream()
+        if(followedIds.isEmpty()) throw new EmptyDataException("FollowerIds is empty");
+
+        List<AccountEntity> accounts = repository.findAll();
+        if(accounts.isEmpty()) throw new EmptyDataException("Accounts is empty");
+
+        return accounts.stream()
                 .filter(entity -> followedIds.contains(entity.getId()))
                 .map(converter::toAccountResponseDtoFromEntity)
                 .collect(Collectors.toList());
     }
 
     public void createAccount(CreateAccountRequestDto requestDto) {
+        Optional.ofNullable(requestDto).ifPresentOrElse(
+                action -> {
+                    userService.validateUserById(requestDto.getFkUserId());
 
-        userService.validateUserById(requestDto.getFkUserId());
-
-        AccountEntity entity = repository.save(converter.toEntityFromCreateAccountRequestDto(requestDto));
-        numberService.saveNumber(
-                AccountNumberRequestDto.builder()
-                        .number(entity.getAccountNumber())
-                        .accountId(entity.getId())
-                        .build()
+                    AccountEntity entity = repository.save(converter.toEntityFromCreateAccountRequestDto(requestDto));
+                    numberService.saveNumber(
+                            AccountNumberRequestDto.builder()
+                                    .number(entity.getAccountNumber())
+                                    .accountId(entity.getId())
+                                    .build()
+                    );
+                },
+                () -> {
+                    throw new InvalidArgumentException("Request is null");
+                }
         );
     }
 
@@ -199,7 +235,7 @@ public class AccountService {
                             requestDto.getAccountProfilePhotoUrl());
                 },
                 () -> {
-                    throw new AccountNotFoundException("Account Not Found");
+                    throw new InvalidArgumentException("Request is null");
                 }
         );
     }

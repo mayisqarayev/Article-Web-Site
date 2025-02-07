@@ -1,6 +1,8 @@
 package com.Article.Web.Site.service;
 
+import com.Article.Web.Site.converter.AccountNumberConverter;
 import com.Article.Web.Site.dto.request.AccountNumberRequestDto;
+import com.Article.Web.Site.exception.InvalidArgumentException;
 import com.Article.Web.Site.model.AccountNumberEntity;
 import com.Article.Web.Site.repo.AccountNumberRepository;
 import org.springframework.stereotype.Service;
@@ -9,10 +11,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -20,11 +19,13 @@ import java.util.stream.IntStream;
 public class AccountNumberService {
 
     private final AccountNumberRepository repository;
+    private final AccountNumberConverter converter;
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final Random RANDOM = new Random();
 
-    public AccountNumberService(AccountNumberRepository repository) {
+    public AccountNumberService(AccountNumberRepository repository, AccountNumberConverter converter) {
         this.repository = repository;
+        this.converter = converter;
     }
 
     public String generateAccountNumber() {
@@ -43,6 +44,11 @@ public class AccountNumberService {
     }
 
     protected void saveNumber(AccountNumberRequestDto requestDto) {
-
+        Optional.ofNullable(requestDto).ifPresentOrElse(action -> {
+                    repository.save(converter.toEntityFromAccountNumberRequestDto(requestDto));
+                },
+                () -> {
+                    throw new InvalidArgumentException("Request is null");
+                });
     }
 }
