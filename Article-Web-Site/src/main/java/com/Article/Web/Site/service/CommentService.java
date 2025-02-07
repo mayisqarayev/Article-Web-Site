@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-
     private final CommentRepository repository;
     private final CommentConverter converter;
     private final ArticleService articleService;
