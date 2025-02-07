@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -47,6 +46,17 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(AccountNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, Object> handleAccountNotFoundException(AccountNotFoundException ex, WebRequest webRequest) {
+        return Map.of(
+                "errorDetails", webRequest.getDescription(false),
+                "errorStatus", HttpStatus.NOT_FOUND.value(),
+                "errorTimeStamp", LocalDateTime.now(),
+                "errorMessage", ex.getMessage()
+        );
+    }
+
+    @ExceptionHandler(ArticleNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, Object> handleArticleNotFoundException(ArticleNotFoundException ex, WebRequest webRequest) {
         return Map.of(
                 "errorDetails", webRequest.getDescription(false),
                 "errorStatus", HttpStatus.NOT_FOUND.value(),

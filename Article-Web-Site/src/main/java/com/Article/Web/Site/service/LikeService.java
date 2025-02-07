@@ -2,6 +2,7 @@ package com.Article.Web.Site.service;
 
 import com.Article.Web.Site.converter.LikeConverter;
 import com.Article.Web.Site.dto.request.LikeRequestDto;
+import com.Article.Web.Site.exception.EmptyDataException;
 import com.Article.Web.Site.model.LikeEntity;
 import com.Article.Web.Site.repo.LikeRepository;
 import org.springframework.context.annotation.Lazy;
@@ -50,7 +51,10 @@ public class LikeService {
     }
 
     protected List<LikeEntity> getLikes() {
-        return repository.findAll();
+        List<LikeEntity> likes = repository.findAll();
+        if(likes.isEmpty()) throw new EmptyDataException("Likes is empty");
+
+        return likes;
     }
 
 }
