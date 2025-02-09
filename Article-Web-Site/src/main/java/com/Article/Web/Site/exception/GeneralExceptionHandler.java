@@ -188,4 +188,24 @@ public class GeneralExceptionHandler {
                 "errorLocation", errorLocation
         );
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest webRequest) {
+
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        String errorLocation = "";
+
+        if(stackTrace.length > 0) errorLocation = stackTrace[0].getClassName() + ". "
+                + stackTrace[0].getMethodName() + "(): "
+                + stackTrace[0].getLineNumber();
+
+        return Map.of(
+                "errorDetails", webRequest.getDescription(false),
+                "errorStatus", HttpStatus.NOT_FOUND.value(),
+                "errorTimeStamp", LocalDateTime.now(),
+                "errorMessage", ex.getMessage(),
+                "errorLocation", errorLocation
+        );
+    }
 }
