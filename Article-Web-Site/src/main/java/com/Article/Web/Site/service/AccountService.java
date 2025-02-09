@@ -208,7 +208,7 @@ public class AccountService {
     public void createAccount(CreateAccountRequestDto requestDto) {
         Optional.ofNullable(requestDto).ifPresentOrElse(
                 action -> {
-                    userService.validateUserById(requestDto.getFkUserId());
+                    userService.checkUserById(requestDto.getFkUserId());
 
                     AccountEntity entity = repository.save(converter.toEntityFromCreateAccountRequestDto(requestDto));
                     numberService.saveNumber(

@@ -27,49 +27,69 @@ public class UserService {
     private final UserConverter converter;
     private final AccountService accountService;
 
-    public UserService(UserRepository repository, UserConverter converter,@Lazy AccountService accountService) {
+    public UserService(UserRepository repository, UserConverter converter, @Lazy AccountService accountService) {
         this.repository = repository;
         this.converter = converter;
         this.accountService = accountService;
     }
 
     public UserResponseDto getUserById(String id) {
+        Optional.ofNullable(id).orElseThrow(() -> new InvalidArgumentException("Id is null"));
+
         return converter.toUserResponseDtoFromEntity(repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found")));
     }
 
     public UserInfoResponseDto getUserInfoById(String id) {
+        Optional.ofNullable(id).orElseThrow(() -> new InvalidArgumentException("Id is null"));
+
         return converter.toUserInfoResponseDtoFromEntity(repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found")));
     }
 
     public List<UserResponseDto> getUsers() {
-        return repository.findAll().stream()
+        List<UserEntity> users = repository.findAll();
+
+        return users.stream()
                 .map(converter::toUserResponseDtoFromEntity)
                 .collect(Collectors.toList());
     }
 
     public void createUser(CreateUserRequestDto requestDto) {
-        repository.save(converter.toEntityFromCreateUserRequestDto(requestDto));
+        Optional.ofNullable(requestDto).ifPresentOrElse(
+                action -> {
+                    repository.save(converter.toEntityFromCreateUserRequestDto(requestDto));
+                },
+                () -> {
+                    throw new InvalidArgumentException("Request is null");
+                }
+        );
     }
 
     public void deleteUserById(String id) {
-        repository.deleteUserById(id);
-        UserEntity user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        Optional.ofNullable(id).ifPresentOrElse(
+                action -> {
+                    repository.deleteUserById(id);
+                    UserEntity user = repository.findById(id)
+                            .orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
-        List<AccountEntity> accounts = user.getAccounts();
-        if(accounts.isEmpty()) throw new EmptyDataException("Accounts is empty");
+                    List<AccountEntity> accounts = user.getAccounts();
+                    if (accounts.isEmpty()) throw new EmptyDataException("Accounts is empty");
 
-        accounts.forEach(account -> {
-            accountService.deleteAccountById(account.getId());
-        });
+                    accounts.forEach(account -> {
+                        accountService.deleteAccountById(account.getId());
+                    });
+                },
+                () -> {
+                    throw new InvalidArgumentException("Id is null");
+                }
+        );
     }
 
     @Async
     public CompletableFuture<Void> batchDeleteUsersByIds(List<String> ids) {
         Optional.ofNullable(ids).orElseThrow(() -> new InvalidArgumentException("Ids is null"));
-        if(ids.isEmpty()) throw new EmptyDataException("Ids is empty");
+        if (ids.isEmpty()) throw new EmptyDataException("Ids is empty");
 
         List<UserEntity> willBeDeletedUsers = new ArrayList<>();
         ids.forEach(id -> {
@@ -77,7 +97,7 @@ public class UserService {
                     .orElseThrow(() -> new UserNotFoundException("User Not Found")));
         });
 
-        if(!willBeDeletedUsers.isEmpty())
+        if (!willBeDeletedUsers.isEmpty())
             willBeDeletedUsers.forEach(user -> {
                 user.setEnabled(false);
                 accountService.deleteAccountById(user.getId());
@@ -87,7 +107,7 @@ public class UserService {
         return CompletableFuture.completedFuture(null);
     }
 
-    protected void validateUserById(String id) {
+    protected void checkUserById(String id) {
         Optional.ofNullable(id).orElseThrow(() -> new InvalidArgumentException("Id is null"));
         repository.findById(id).orElseThrow(() -> new UserNotFoundException("User Not Found"));
     }
