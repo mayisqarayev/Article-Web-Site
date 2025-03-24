@@ -7,6 +7,7 @@ import com.Article.Web.Site.dto.response.UserResponseDto;
 import com.Article.Web.Site.model.UserEntity;
 import com.Article.Web.Site.service.RoleService;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -15,9 +16,10 @@ import java.util.stream.Collectors;
 public class UserConverter {
 
     private final RoleService roleService;
-
-    public UserConverter(RoleService roleService) {
+    private final PasswordEncoder passwordEncoder;
+    public UserConverter(RoleService roleService, PasswordEncoder passwordEncoder) {
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -38,11 +40,11 @@ public class UserConverter {
     public UserEntity toEntityFromCreateUserRequestDto(CreateUserRequestDto requestDto) {
         return UserEntity.builder()
                 .username(requestDto.getUsername())
-                .password(requestDto.getPassword())
+                .password(passwordEncoder.encode(requestDto.getPassword()))
                 .isEnabled(true)
                 .isAccountNonExpired(true)
                 .isAccountNonLocked(true)
-                .isCredentialNonExpired(true)
+                .isCredentialsNonExpired(true)
                 .authority(roleService.getRoleNameById(requestDto.getRoleId())).build();
     }
 
@@ -53,7 +55,7 @@ public class UserConverter {
                 .isEnabled(entity.isEnabled())
                 .isAccountNonExpired(entity.isAccountNonExpired())
                 .isAccountNonLocked(entity.isAccountNonLocked())
-                .isCredentialNonExpired(entity.isCredentialNonExpired())
+                .isCredentialNonExpired(entity.isCredentialsNonExpired())
                 .authority(entity.getAuthority())
                 .accounts(entity.getAccounts().stream()
                         .map(account ->

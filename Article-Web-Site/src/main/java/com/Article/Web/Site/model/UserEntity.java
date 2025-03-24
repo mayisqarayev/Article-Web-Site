@@ -25,7 +25,7 @@ public class UserEntity {
     private boolean isEnabled;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
-    private boolean isCredentialNonExpired;
+    private boolean isCredentialsNonExpired;
     private String authority;
 
     @OneToMany(mappedBy = "fkUserId", targetEntity = AccountEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -35,11 +35,11 @@ public class UserEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserEntity that)) return false;
-        return isEnabled == that.isEnabled && isAccountNonExpired == that.isAccountNonExpired && isAccountNonLocked == that.isAccountNonLocked && isCredentialNonExpired == that.isCredentialNonExpired && Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(authority, that.authority);
+        return isEnabled == that.isEnabled && isAccountNonExpired == that.isAccountNonExpired && isAccountNonLocked == that.isAccountNonLocked && isCredentialsNonExpired == that.isCredentialsNonExpired && Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(authority, that.authority) && Objects.equals(accounts, that.accounts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, isEnabled, isAccountNonExpired, isAccountNonLocked, isCredentialNonExpired, authority);
+        return Objects.hash(id, username, password, isEnabled, isAccountNonExpired, isAccountNonLocked, isCredentialsNonExpired, authority, accounts);
     }
 }
